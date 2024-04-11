@@ -1,0 +1,74 @@
+SQL Internal Assessment-2
+
+Q1.
+select machine_id from L1_maintenance_records
+where month(maintenance_date) = 3 and year(maintenance_date) = 2024 
+and cost>(select avg(cost) from L1_maintenance_records)
+group by machine_id;
+
+
+Q2.
+select maintenance_type, count(*) from L1_maintenance_records
+where month(maintenance_date) = 3 and year(maintenance_date) = 2024 
+group by maintenance_type 
+order by count(*);
+
+Q3.
+select technician_name, count(*), avg(cost) from l1_maintenance_records
+where month(maintenance_date) = 3 and year(maintenance_date) = 2024 
+group by technician_name
+order by avg(cost) desc;
+
+Q4.
+select product_id, avg(incident_count_pre_update-incident_count_post_update) as avg_red
+from l2_updates
+group by product_id;
+
+Q5.
+select update_id, user_feedback_score
+from l2_updates
+order by user_feedback_score desc limit 1;
+
+Q6.
+select product_id, (incident_count_pre_update-incident_count_post_update) as improvement
+from l2_updates
+order by improvement;
+
+Q7.
+select 	p.patient_name, f.facility_name, v.reason_for_visit, t.outcome from l3_patients p
+join l3_visits v using (patient_id)
+join l3_treatments t using (visit_id)
+join l3_facilities f using (facility_id)
+where month(visit_date) = 3 and year(visit_date) = 2024 ;
+
+Q8.
+select f.facility_id, f.facility_name, v.reason_for_visit, count(f.facility_id) count_of_visit from l3_facilities f
+join l3_visits v using (facility_id)
+where month(visit_date) = 3 and year(visit_date) = 2024 and reason_for_visit = 'Emergency'
+group by facility_id
+order by count_of_visit desc;
+
+Q9.
+select p.patient_name, p.insurance_provider from l3_patients p
+join l3_visits v using (patient_id)
+join l3_treatments t using (visit_id)
+where quarter(v.visit_date) = 1 and year(v.visit_date) = 2024 and t.outcome = 'Complicated';
+
+Q10.
+select (p.product_name), p.category category, sum(s.quantity) total_quantity from l4_products p
+join L4_sales s using (product_id)
+where month(s.sale_date) = 3 and year(s.sale_date) = 2024
+group by category, (p.product_name)
+order by total_quantity desc;
+
+Q11.
+create view analysis as 
+select st.region, s.quantity from l4_sales s
+join L4_stores st using (store_id)
+
+Q12.
+select p.product_name, st.region from l4_products p
+full join l4_sales as s using (product_id)
+full join L4_stores as st using (store_id)
+where month(s.sale_date) = 3 and year(s.sale_date) = 2024;
+
